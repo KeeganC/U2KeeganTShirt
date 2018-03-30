@@ -47,10 +47,10 @@ namespace U2KeeganTShirt
             Byte bytInput, bytInput2, bytInput3;
 
             intInput2 = intInput;
-            
+
             bytInput2 = Convert.ToByte(intInput2);
 
-            if(intInput % 2 == 0)
+            if (intInput % 2 == 0)
             {
                 bytInput = 125;
                 bytInput3 = 0;
@@ -71,7 +71,73 @@ namespace U2KeeganTShirt
             rctArms.Fill = myColour;
             rctArms.Stroke = myColour;
 
+            //create stripe colour
+            SolidColorBrush myStripeColour = new SolidColorBrush();
+            myStripeColour.Color = Color.FromArgb(255, 160, 160, 160);
 
+            /* NIU //add stripes
+            Rectangle rctStripe = addStripe(myStripeColour, 10, 64);
+
+            myCanvas.Children.Add(rctStripe);
+            */
+
+            //assure the stripes aren't too thin
+            if(intInput < 15)
+            {
+                intInput = intInput + 15;
+            }
+
+            //add stripes until shirt is full
+            int intLimit = 0, counter = 0, intStripeWidth = intInput / 10, intStripeHeight = 64;
+            while(intLimit < 286)
+            {
+                counter++;
+
+                myCanvas.Children.Add(addStripe(myStripeColour, intStripeWidth, intStripeHeight));
+
+                intStripeHeight = intStripeHeight + intStripeWidth * 2;
+                intLimit = intStripeHeight;
+            }
+
+            //add sleeve stripes
+            Rectangle rctArmStripe1 = new Rectangle();
+            rctArmStripe1.Height = 59;
+            rctArmStripe1.Width = intStripeWidth;
+            Canvas.SetTop(rctArmStripe1, 64);
+            Canvas.SetRight(rctArmStripe1, 350);
+            rctArmStripe1.Fill = myStripeColour;
+            rctArmStripe1.Stroke = myStripeColour;
+
+            myCanvas.Children.Add(rctArmStripe1);
+
+            Rectangle rctArmStripe2 = new Rectangle();
+            rctArmStripe2.Height = 59;
+            rctArmStripe2.Width = intStripeWidth;
+            Canvas.SetTop(rctArmStripe2, 64);
+            Canvas.SetLeft(rctArmStripe2, 350);
+            rctArmStripe2.Fill = myStripeColour;
+            rctArmStripe2.Stroke = myStripeColour;
+
+            myCanvas.Children.Add(rctArmStripe2);
+
+            //ensure nothing ovelaps the neck or bottom holes
+            myCanvas.Children.Remove(neckHole);
+            myCanvas.Children.Add(neckHole);
+            myCanvas.Children.Remove(bottomHole);
+            myCanvas.Children.Add(bottomHole);
+        }
+
+        private static Rectangle addStripe(SolidColorBrush myStripeColour, int height, int top)
+        {
+            Rectangle rctStripe = new Rectangle();
+
+            rctStripe.Height = height;
+            rctStripe.Width = 167;
+            Canvas.SetTop(rctStripe, top);
+            Canvas.SetLeft(rctStripe, 171);
+            rctStripe.Fill = myStripeColour;
+            rctStripe.Stroke = myStripeColour;
+            return rctStripe;
         }
     }
 }
